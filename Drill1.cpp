@@ -1,4 +1,3 @@
-// getting  an error here 
 #include "std_lib_facilities.h"
 
 //------------------------------------------------------------------------------
@@ -65,11 +64,11 @@ Token Token_stream ::  get()
     switch (ch) {
     case '=':    // for "print" CHANGED
     case 'x':    // for "quit" CHANGED
-    case '(': case ')': case '+': case '-': case '*': case '/': 
+    case '(': case ')': case '+': case '-': case '*': case '/':case '%':// add remainder
         return Token(ch);        // let each character represent itself
     case '.':
     case '0': case '1': case '2': case '3': case '4':
-    case '5': case '6': case '7': case '8': case '9': // 8 was missing
+    case '5': case '6': case '7': case '8': case '9':// 8 was missing
     {
         cin.putback(ch);         // put digit back into the input stream
         double val;
@@ -136,7 +135,14 @@ double term()
             t = ts.get();
             break;
         }
-
+        case '%':
+        {
+            double d = primary();
+            if (d == 0) error("Do not even try diving by zero !");
+            left = remainder(left,d);
+            t = ts.get();
+            break;
+        }
 
         default:
             ts.putback(t);     // put t back into the token stream
@@ -177,7 +183,7 @@ int main()// add {} and define val
 {
     cout << "Welcome to our simple calculator."<< endl;
     cout << "Please enter expressions using floating-point numbers" << endl;
-    cout << "Please use + for sum | * for multiplication | / for division | - for subtraction." << endl;
+    cout << "Please use + for sum | * for multiplication | / for division | - for subtraction | % for remainder !" << endl;
     cout << "Use = to print your value" << endl;
     cout << "Use x to quit" << endl;
     double val = 0.0;
